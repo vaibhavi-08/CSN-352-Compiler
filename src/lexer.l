@@ -65,52 +65,52 @@ L?'(\\.|[^\\'])+'  { symtab[yytext]="CONSTANT CHAR";program.emplace_back(yytext)
 {D}*"."{D}+({E})?{FS}? { symtab[yytext]="CONSTANT FLOAT";program.emplace_back(yytext);count();}
 L?\"(\\.|[^\\"])*\"    { symtab[yytext]="STRING LITERAL";program.emplace_back(yytext);count();}
 
-"..."   { symtab[yytext]="ELLIPSIS";program.emplace_back(yytext);count();}
-">>="   { symtab[yytext]="RIGHT_ASSIGN";program.emplace_back(yytext);count();}
-"<<="   { symtab[yytext]="LEFT_ASSIGN";program.emplace_back(yytext);count();}
-"+="    { symtab[yytext]="ADD_ASSIGN";program.emplace_back(yytext);count();}
-"-="    { symtab[yytext]="SUB_ASSIGN";program.emplace_back(yytext);count();}
-"*="    { symtab[yytext]="MUL_ASSIGN";program.emplace_back(yytext);count();}
-"/="    { symtab[yytext]="DIV_ASSIGN";program.emplace_back(yytext);count();}
-"%="    { symtab[yytext]="MOD_ASSIGN";program.emplace_back(yytext);count();}
-"&="    { symtab[yytext]="AND_ASSIGN";program.emplace_back(yytext);count();}
-"^="    { symtab[yytext]="XOR_ASSIGN";program.emplace_back(yytext);count();}
-"|="    { symtab[yytext]="OR_ASSIGN";program.emplace_back(yytext);count();}
-">>"    { symtab[yytext]="RIGHT_OP";program.emplace_back(yytext);count();}
-"<<"    { symtab[yytext]="LEFT_OP";program.emplace_back(yytext);count();}
-"++"    { symtab[yytext]="INC_OP";program.emplace_back(yytext);count();}
-"--"    { symtab[yytext]="DEC_OP";program.emplace_back(yytext);count();}
-"->"    { symtab[yytext]="POINTER_OP";program.emplace_back(yytext);count();}
-"&&"    { symtab[yytext]="AND_OP";program.emplace_back(yytext);count();}
-"||"    { symtab[yytext]="OR_OP";program.emplace_back(yytext);count();}
-"<="    { symtab[yytext]="LE_OP";program.emplace_back(yytext);count();}
-">="    { symtab[yytext]="GE_OP";program.emplace_back(yytext);count();}
-"=="    { symtab[yytext]="EQ_OP";program.emplace_back(yytext);count();}
-"!="    { symtab[yytext]="NEQ_OP";program.emplace_back(yytext);count();}
-";"	    { symtab[yytext]="SEPERATOR";program.emplace_back(yytext);count();}
-("{"|"<%")  { symtab[yytext]="SEPERATOR";program.emplace_back(yytext);count();}
-("}"|"%>")  { symtab[yytext]="SEPERATOR";program.emplace_back(yytext);count();}
-","	        { symtab[yytext]="SEPERATOR";program.emplace_back(yytext);count();}
-":"	        { symtab[yytext]="SEPERATOR";program.emplace_back(yytext);count();}
-"="	        { symtab[yytext]="ASSIGN";program.emplace_back(yytext);count();}
-"("	        { symtab[yytext]="SEPERATOR";program.emplace_back(yytext);count();}
-")"	        { symtab[yytext]="SEPERATOR";program.emplace_back(yytext);count();}
-("["|"<:")  { symtab[yytext]="SEPERATOR";program.emplace_back(yytext);count();}
-("]"|":>")  { symtab[yytext]="SEPERATOR";program.emplace_back(yytext);count();}
-"."	        { symtab[yytext]="SEPERATOR";program.emplace_back(yytext);count();}
-"&"	        { symtab[yytext]="BITWISE_AND";program.emplace_back(yytext);count();}
-"!"         { symtab[yytext]="NOT";program.emplace_back(yytext);count();}
-"~"	        { symtab[yytext]="BITWISE_NOT";program.emplace_back(yytext);count();}
-"-"	        { symtab[yytext]="MINUS";program.emplace_back(yytext);count();}
-"+"	        { symtab[yytext]="PLUS";program.emplace_back(yytext);count();}
-"*"	        { symtab[yytext]="MUL";program.emplace_back(yytext);count();}
-"/"	        { symtab[yytext]="DIV";program.emplace_back(yytext);count();}
-"%"	        { symtab[yytext]="MOD";program.emplace_back(yytext);count();}
-"<"	        { symtab[yytext]="LESSTHAN";program.emplace_back(yytext);count();}
-">"         { symtab[yytext]="GREATERTHAN";program.emplace_back(yytext);count();}
-"^"	        { symtab[yytext]="XOR";program.emplace_back(yytext);count();}
-"|"	        { symtab[yytext]="OR";program.emplace_back(yytext);count();}
-"?"	        { symtab[yytext]="QUESTION MARK";program.emplace_back(yytext);count();}
+"..."   { symtab[yytext]="ELLIPSIS";program.emplace_back(yytext);count(); return (ELLIPSIS);}
+">>="   { symtab[yytext]="RIGHT_ASSIGN";program.emplace_back(yytext);count();return (RIGHT_ASSIGN);}
+"<<="   { symtab[yytext]="LEFT_ASSIGN";program.emplace_back(yytext);count();return (LEFT_ASSIGN);}
+"+="    { symtab[yytext]="ADD_ASSIGN";program.emplace_back(yytext);count();return (ADD_ASSIGN);}
+"-="    { symtab[yytext]="SUB_ASSIGN";program.emplace_back(yytext);count();return (SUB_ASSIGN);}
+"*="    { symtab[yytext]="MUL_ASSIGN";program.emplace_back(yytext);count();return (MUL_ASSIGN);}
+"/="    { symtab[yytext]="DIV_ASSIGN";program.emplace_back(yytext);count();return (DIV_ASSIGN);}
+"%="    { symtab[yytext]="MOD_ASSIGN";program.emplace_back(yytext);count();return (MOD_ASSIGN);}
+"&="    { symtab[yytext]="AND_ASSIGN";program.emplace_back(yytext);count();return (AND_ASSIGN);}
+"^="    { symtab[yytext]="XOR_ASSIGN";program.emplace_back(yytext);count();return (XOR_ASSIGN);}
+"|="    { symtab[yytext]="OR_ASSIGN";program.emplace_back(yytext);count();return (OR_ASSIGN);}
+">>"    { symtab[yytext]="RIGHT_OP";program.emplace_back(yytext);count();return (RIGHT_OP);}
+"<<"    { symtab[yytext]="LEFT_OP";program.emplace_back(yytext);count();return (LEFT_OP);}
+"++"    { symtab[yytext]="INC_OP";program.emplace_back(yytext);count();return (INC_OP);}
+"--"    { symtab[yytext]="DEC_OP";program.emplace_back(yytext);count();return (DEC_OP);}
+"->"    { symtab[yytext]="PTR_OP";program.emplace_back(yytext);count();return (PTR_OP);}
+"&&"    { symtab[yytext]="AND_OP";program.emplace_back(yytext);count();return (AND_OP);}
+"||"    { symtab[yytext]="OR_OP";program.emplace_back(yytext);count();return (OR_OP);}
+"<="    { symtab[yytext]="LE_OP";program.emplace_back(yytext);count();return (LE_OP);}
+">="    { symtab[yytext]="GE_OP";program.emplace_back(yytext);count();return (GE_OP);}
+"=="    { symtab[yytext]="EQ_OP";program.emplace_back(yytext);count();return (EQ_OP);}
+"!="    { symtab[yytext]="NE_OP";program.emplace_back(yytext);count();return (NE_OP);}
+";"	    { symtab[yytext]="SEPERATOR";program.emplace_back(yytext);count();return (';');}
+("{"|"<%")  { symtab[yytext]="SEPERATOR";program.emplace_back(yytext);count();return ('{');}
+("}"|"%>")  { symtab[yytext]="SEPERATOR";program.emplace_back(yytext);count();return ('}');
+","	        { symtab[yytext]="SEPERATOR";program.emplace_back(yytext);count();return (',');}
+":"	        { symtab[yytext]="SEPERATOR";program.emplace_back(yytext);count();return (':');}
+"="	        { symtab[yytext]="ASSIGN";program.emplace_back(yytext);count(); return ('=');}
+"("	        { symtab[yytext]="SEPERATOR";program.emplace_back(yytext);count();return ('(');}
+")"	        { symtab[yytext]="SEPERATOR";program.emplace_back(yytext);count();return (')');}
+("["|"<:")  { symtab[yytext]="SEPERATOR";program.emplace_back(yytext);count();return ('[');}
+("]"|":>")  { symtab[yytext]="SEPERATOR";program.emplace_back(yytext);count();return (']');}
+"."	        { symtab[yytext]="SEPERATOR";program.emplace_back(yytext);count();return ('.');}
+"&"	        { symtab[yytext]="BITWISE_AND";program.emplace_back(yytext);count();return ('&');}
+"!"         { symtab[yytext]="NOT";program.emplace_back(yytext);count();return ('!');}
+"~"	        { symtab[yytext]="BITWISE_NOT";program.emplace_back(yytext);count();return ('!');}
+"-"	        { symtab[yytext]="MINUS";program.emplace_back(yytext);count();return ('-');}
+"+"	        { symtab[yytext]="PLUS";program.emplace_back(yytext);count();return ('+');}
+"*"	        { symtab[yytext]="MUL";program.emplace_back(yytext);count();return ('*');}
+"/"	        { symtab[yytext]="DIV";program.emplace_back(yytext);count();return ('/');}
+"%"	        { symtab[yytext]="MOD";program.emplace_back(yytext);count();return ('%');}
+"<"	        { symtab[yytext]="LESSTHAN";program.emplace_back(yytext);count();return ('<');}
+">"         { symtab[yytext]="GREATERTHAN";program.emplace_back(yytext);count();return ('>');}
+"^"	        { symtab[yytext]="XOR";program.emplace_back(yytext);count();return ('^');}
+"|"	        { symtab[yytext]="OR";program.emplace_back(yytext);count();return ('|');}
+"?"	        { symtab[yytext]="QUESTION MARK";program.emplace_back(yytext);count();return ('?');}
 [ \t\v\n\f]		{ /* DO NOTHING*/ count();}
 .			{ iserror=true;error.emplace_back(yytext,line);count();}
 
