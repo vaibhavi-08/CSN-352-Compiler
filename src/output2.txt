@@ -1,0 +1,92 @@
+Original Symbol Table:
+-------------------------------------------------------------------------------
+| Lexeme                                | Token                                 |
+-------------------------------------------------------------------------------
+| else                                 | ELSE                                 |
+| }                                    | SEPERATOR                            |
+| ==                                   | EQ_OP                                |
+| 2                                    | INTEGER                              |
+| %                                    | MOD                                  |
+| "%d is even\n"                       | STRING LITERAL                       |
+| if                                   | IF                                   |
+| int                                  | INT                                  |
+| ++                                   | INC_OP                               |
+| return                               | RETURN                               |
+| "%d is odd\n"                        | STRING LITERAL                       |
+| (                                    | SEPERATOR                            |
+| )                                    | SEPERATOR                            |
+| printf                               | IDENTIFIER                           |
+| {                                    | SEPERATOR                            |
+| ,                                    | SEPERATOR                            |
+| <                                    | LESSTHAN                             |
+| ;                                    | SEPERATOR                            |
+| main                                 | IDENTIFIER                           |
+| for                                  | FOR                                  |
+| i                                    | IDENTIFIER                           |
+| =                                    | ASSIGN                               |
+| 0                                    | INTEGER                              |
+| 10                                   | INTEGER                              |
+-------------------------------------------------------------------------------
+
+
+New Symbol Table (Tokens and Types):
+-------------------------------------------------------------------------------
+| Lexeme                | Token                 | Type                  |
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+whole program after separation:
+|int|
+|main|
+|(|
+|)|
+|{|
+|int|
+|i|
+|;|
+|for|
+|(|
+|i|
+|=|
+|0|
+|;|
+|i|
+|<|
+|10|
+|;|
+|i|
+|++|
+|)|
+|{|
+|if|
+|(|
+|i|
+|%|
+|2|
+|==|
+|0|
+|)|
+|{|
+|printf|
+|(|
+|"%d is even\n"|
+|,|
+|i|
+|)|
+|;|
+|}|
+|else|
+|{|
+|printf|
+|(|
+|"%d is odd\n"|
+|,|
+|i|
+|)|
+|;|
+|}|
+|}|
+|return|
+|0|
+|;|
+|}|

@@ -79,22 +79,30 @@
 
 using namespace std;
 
-// Symbol table (you might need this from your lexer)
+// Existing symbol table and other declarations
 extern unordered_map<string, string> symtab;
 extern vector<string> program;
 extern vector<pair<string, int>> error;
 extern int line;
 extern bool iserror;
 
+// New symbol table for tokens and their types
+struct SymbolInfo {
+    string token;
+    string type;
+};
+extern unordered_map<string, SymbolInfo> new_symtab;
+
+// current Type declaration
+string currentType = "";
+
 int yylex();
 void yyerror(const char *s);
-bool iserror = false;
-int line = 1;
-vector<pair<string, int>> error;
-unordered_map<string, string> symtab;
-vector<string> program;
 
-#line 98 "grammar.tab.c"
+void add_to_token_table(string token, string type);
+
+
+#line 106 "grammar.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -663,28 +671,28 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    67,    67,    68,    69,    70,    74,    75,    76,    77,
-      78,    79,    80,    81,    85,    86,    90,    91,    92,    93,
-      94,    95,    99,   100,   101,   102,   103,   104,   109,   110,
-     114,   115,   116,   117,   121,   122,   123,   127,   128,   129,
-     133,   134,   135,   136,   137,   141,   142,   143,   147,   148,
-     152,   153,   157,   158,   162,   163,   167,   168,   172,   173,
-     177,   178,   182,   183,   184,   185,   186,   187,   188,   189,
-     190,   191,   192,   196,   197,   201,   205,   206,   210,   211,
-     212,   213,   214,   215,   219,   220,   224,   225,   229,   230,
-     231,   232,   233,   237,   238,   239,   240,   241,   242,   243,
-     244,   245,   246,   247,   248,   252,   253,   254,   258,   259,
-     263,   264,   268,   272,   273,   274,   275,   279,   280,   284,
-     285,   286,   290,   291,   292,   296,   297,   301,   302,   306,
-     307,   311,   312,   316,   317,   318,   319,   320,   321,   322,
-     326,   327,   328,   329,   333,   334,   339,   340,   344,   345,
-     349,   350,   351,   355,   356,   360,   361,   365,   366,   367,
-     371,   372,   373,   374,   375,   376,   377,   378,   379,   383,
-     384,   385,   389,   390,   394,   395,   396,   397,   398,   399,
-     403,   404,   405,   409,   410,   411,   412,   416,   417,   421,
-     422,   426,   427,   431,   432,   433,   437,   438,   439,   440,
-     444,   445,   446,   447,   448,   452,   453,   457,   458,   462,
-     463,   464,   465
+       0,    75,    75,    76,    77,    78,    82,    83,    84,    85,
+      86,    87,    88,    89,    93,    94,    98,    99,   100,   101,
+     102,   103,   107,   108,   109,   110,   111,   112,   116,   117,
+     121,   122,   123,   124,   128,   129,   130,   134,   135,   136,
+     140,   141,   142,   143,   144,   148,   149,   150,   154,   155,
+     159,   160,   164,   165,   169,   170,   174,   175,   179,   180,
+     184,   185,   189,   190,   191,   192,   193,   194,   195,   196,
+     197,   198,   199,   203,   204,   208,   212,   213,   217,   218,
+     219,   220,   221,   222,   226,   227,   231,   232,   236,   237,
+     238,   239,   240,   244,   245,   246,   247,   248,   249,   250,
+     251,   252,   253,   254,   255,   259,   260,   261,   265,   266,
+     270,   271,   275,   279,   280,   281,   282,   286,   287,   291,
+     292,   293,   297,   298,   299,   303,   304,   308,   309,   313,
+     314,   318,   319,   323,   324,   325,   326,   327,   328,   329,
+     333,   334,   335,   336,   340,   341,   345,   346,   350,   351,
+     355,   356,   357,   361,   362,   366,   367,   371,   372,   373,
+     377,   378,   379,   380,   381,   382,   383,   384,   385,   389,
+     390,   391,   395,   396,   400,   401,   402,   403,   404,   405,
+     409,   410,   411,   415,   416,   417,   418,   422,   423,   427,
+     428,   432,   433,   437,   438,   439,   443,   444,   445,   446,
+     450,   451,   452,   453,   454,   458,   459,   463,   464,   468,
+     469,   470,   471
 };
 #endif
 
@@ -775,24 +783,24 @@ static const yytype_int16 yypact[] =
      182,   187,  -221,   -33,  -221,  -221,  -221,  -221,   199,   -20,
      835,    61,  -221,  -221,   546,  -221,  -221,  -221,   969,  -221,
     -221,  -221,   835,    32,  -221,   177,  -221,   527,   648,  -221,
-     835,  -221,  -221,   185,   527,   835,   835,   835,   212,   598,
-     190,  -221,  -221,  -221,    45,    38,    13,   211,   273,  -221,
-    -221,   669,   835,   275,  -221,  -221,  -221,  -221,  -221,  -221,
+     835,  -221,  -221,   192,   527,   835,   835,   835,   219,   598,
+     194,  -221,  -221,  -221,    45,    38,    13,   213,   275,  -221,
+    -221,   669,   835,   282,  -221,  -221,  -221,  -221,  -221,  -221,
     -221,  -221,  -221,  -221,  -221,   835,  -221,   835,   835,   835,
      835,   835,   835,   835,   835,   835,   835,   835,   835,   835,
      835,   835,   835,   835,   835,   835,   835,  -221,  -221,   456,
     -221,  -221,   889,   719,  -221,     5,  -221,   118,  -221,  1147,
-    -221,   282,  -221,  -221,  -221,  -221,  -221,    -6,  -221,  -221,
-     126,  -221,   835,  -221,   214,   527,  -221,    43,    46,   127,
-     226,   598,  -221,  -221,  -221,  1069,   154,  -221,   835,  -221,
+    -221,   285,  -221,  -221,  -221,  -221,  -221,    -6,  -221,  -221,
+     126,  -221,   835,  -221,   226,   527,  -221,    43,    46,   127,
+     228,   598,  -221,  -221,  -221,  1069,   154,  -221,   835,  -221,
     -221,   145,  -221,   163,  -221,  -221,  -221,  -221,  -221,   117,
      117,   164,   164,   233,   233,   233,   233,    73,    73,   238,
-     153,   149,   157,   215,    66,  -221,  -221,  -221,   227,   228,
-    -221,   224,   118,  1111,   740,  -221,  -221,  -221,   491,  -221,
+     153,   157,   157,   215,    66,  -221,  -221,  -221,   239,   241,
+    -221,   240,   118,  1111,   740,  -221,  -221,  -221,   491,  -221,
     -221,  -221,  -221,  -221,   527,   527,   527,   835,   752,  -221,
-    -221,   835,  -221,   835,  -221,  -221,  -221,  -221,   239,  -221,
-     240,  -221,  -221,   251,  -221,  -221,   147,   527,   150,  -221,
-    -221,  -221,  -221,   527,   244,  -221,   527,  -221,  -221,  -221
+    -221,   835,  -221,   835,  -221,  -221,  -221,  -221,   260,  -221,
+     262,  -221,  -221,   288,  -221,  -221,   147,   527,   150,  -221,
+    -221,  -221,  -221,   527,   208,  -221,   527,  -221,  -221,  -221
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -841,12 +849,12 @@ static const yytype_uint8 yydefact[] =
 static const yytype_int16 yypgoto[] =
 {
     -221,  -221,  -221,  -221,   -48,  -221,   -91,    37,    48,     8,
-      52,   103,   110,   119,   121,   135,  -221,   -55,   -70,  -221,
-     -38,   -54,     6,     0,  -221,   272,  -221,   -27,  -221,  -221,
-     268,   -61,   -24,  -221,   114,  -221,   297,   194,    47,   -13,
-     -29,    -3,  -221,   -57,  -221,   129,  -221,   197,  -118,  -220,
-    -151,  -221,   -74,  -221,   152,    95,   241,  -172,  -221,  -221,
-    -221,  -221,   331,  -221
+      52,   111,   121,  -221,    44,   119,  -221,   -55,   -70,  -221,
+     -38,   -54,     6,     0,  -221,   289,  -221,   -27,  -221,  -221,
+     269,   -61,   -24,  -221,   110,  -221,   301,   214,    47,   -13,
+     -29,    -3,  -221,   -57,  -221,   106,  -221,   198,  -118,  -220,
+    -151,  -221,   -74,  -221,   152,    95,   242,  -172,  -221,  -221,
+    -221,  -221,   332,  -221
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -892,18 +900,18 @@ static const yytype_int16 yytable[] =
      226,   223,   139,    72,   210,   211,   222,   165,   155,   139,
      333,   334,   335,   212,   213,   238,   328,   279,   280,   147,
      330,   339,   218,   219,   239,   191,   146,   192,   252,   193,
-     281,   282,   266,   345,   242,   139,   255,   260,   340,   347,
-     287,   288,   349,   262,   268,   146,   269,   312,   274,   336,
-     338,    81,    82,    83,    84,   307,    85,    86,   317,   326,
-     324,   325,   194,   195,   196,   197,   198,   199,   200,   201,
-     202,   203,   341,   139,   343,   342,     2,     3,     4,     5,
+     281,   282,   266,   345,   242,   139,   291,   292,   340,   347,
+     287,   288,   349,   255,   260,   146,   268,   262,   269,   336,
+     338,    81,    82,    83,    84,   274,    85,    86,   307,   312,
+     317,   348,   194,   195,   196,   197,   198,   199,   200,   201,
+     202,   203,   324,   139,   325,   326,     2,     3,     4,     5,
        6,     7,     8,     9,    10,    11,    12,    13,    14,    15,
-      16,    17,    18,   289,    19,    20,    21,   348,    87,    88,
-      89,   290,    90,    91,    92,    93,    94,    95,    96,    97,
-      98,   291,   153,   158,   292,   245,    99,   100,   101,   102,
-     103,   104,    81,    82,    83,    84,   204,    85,    86,   293,
-     149,   105,    53,   106,   310,   254,    62,     0,   306,   229,
-       0,     0,     0,     0,     0,     0,     0,     2,     3,     4,
+      16,    17,    18,   341,    19,    20,    21,   342,    87,    88,
+      89,   289,    90,    91,    92,    93,    94,    95,    96,    97,
+      98,   343,   290,   293,   158,   306,    99,   100,   101,   102,
+     103,   104,    81,    82,    83,    84,   204,    85,    86,   153,
+     310,   105,    53,   106,   149,   245,   254,    62,     0,     0,
+     229,     0,     0,     0,     0,     0,     0,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,     0,    19,    20,    21,     0,    87,
       88,    89,     0,    90,    91,    92,    93,    94,    95,    96,
@@ -1020,18 +1028,18 @@ static const yytype_int16 yycheck[] =
       67,    16,   232,    82,    70,    71,    79,   250,   308,   239,
      314,   315,   316,    10,    11,    63,   303,   210,   211,   304,
      304,   321,    14,    15,    67,    62,   304,    64,    81,    66,
-     212,   213,   265,   337,    65,   265,    81,    55,   323,   343,
-     218,   219,   346,    83,    63,   323,     3,    63,     3,   317,
-     318,     3,     4,     5,     6,     3,     8,     9,    62,    65,
-      63,    63,    18,    19,    20,    21,    22,    23,    24,    25,
-      26,    27,    63,   303,    53,    65,    28,    29,    30,    31,
+     212,   213,   265,   337,    65,   265,   222,   223,   323,   343,
+     218,   219,   346,    81,    55,   323,    63,    83,     3,   317,
+     318,     3,     4,     5,     6,     3,     8,     9,     3,    63,
+      62,    83,    18,    19,    20,    21,    22,    23,    24,    25,
+      26,    27,    63,   303,    63,    65,    28,    29,    30,    31,
       32,    33,    34,    35,    36,    37,    38,    39,    40,    41,
-      42,    43,    44,   220,    46,    47,    48,    83,    50,    51,
-      52,   221,    54,    55,    56,    57,    58,    59,    60,    61,
-      62,   222,    70,    75,   223,   151,    68,    69,    70,    71,
-      72,    73,     3,     4,     5,     6,    82,     8,     9,   224,
-      63,    83,    84,    85,   250,   168,    35,    -1,   239,   128,
-      -1,    -1,    -1,    -1,    -1,    -1,    -1,    28,    29,    30,
+      42,    43,    44,    63,    46,    47,    48,    65,    50,    51,
+      52,   220,    54,    55,    56,    57,    58,    59,    60,    61,
+      62,    53,   221,   224,    75,   239,    68,    69,    70,    71,
+      72,    73,     3,     4,     5,     6,    82,     8,     9,    70,
+     250,    83,    84,    85,    63,   151,   168,    35,    -1,    -1,
+     128,    -1,    -1,    -1,    -1,    -1,    -1,    28,    29,    30,
       31,    32,    33,    34,    35,    36,    37,    38,    39,    40,
       41,    42,    43,    44,    -1,    46,    47,    48,    -1,    50,
       51,    52,    -1,    54,    55,    56,    57,    58,    59,    60,
@@ -1153,7 +1161,7 @@ static const yytype_uint8 yystos[] =
       55,   143,    83,    83,    63,    62,   127,   134,    63,     3,
       63,    89,   104,   106,     3,   104,    92,    92,    92,    93,
       93,    94,    94,    95,    95,    95,    95,    96,    96,    97,
-      98,    99,   100,   101,   106,   104,    85,    63,   129,   134,
+      98,   100,   100,   101,   106,   104,    85,    63,   129,   134,
       65,   107,   135,    62,    64,    49,   131,     3,    67,    85,
      120,   107,    63,   138,    63,    63,    63,    62,   143,    92,
       63,    67,    65,    81,    63,    63,    65,    63,   129,    65,
@@ -1675,1238 +1683,8 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 2: /* primary_expression: IDENTIFIER  */
-#line 67 "grammar.y"
-                      { (yyval.ival) = 1; }
-#line 1682 "grammar.tab.c"
-    break;
 
-  case 3: /* primary_expression: CONSTANT  */
-#line 68 "grammar.y"
-                      { (yyval.ival) = 2; }
 #line 1688 "grammar.tab.c"
-    break;
-
-  case 4: /* primary_expression: STRING_LITERAL  */
-#line 69 "grammar.y"
-                         { (yyval.ival) = 3; }
-#line 1694 "grammar.tab.c"
-    break;
-
-  case 5: /* primary_expression: '(' expression ')'  */
-#line 70 "grammar.y"
-                             { (yyval.ival) = (yyvsp[-1].ival); }
-#line 1700 "grammar.tab.c"
-    break;
-
-  case 6: /* postfix_expression: primary_expression  */
-#line 74 "grammar.y"
-                             { (yyval.ival) = (yyvsp[0].ival); }
-#line 1706 "grammar.tab.c"
-    break;
-
-  case 7: /* postfix_expression: postfix_expression '[' expression ']'  */
-#line 75 "grammar.y"
-                                                { (yyval.ival) = 4; }
-#line 1712 "grammar.tab.c"
-    break;
-
-  case 8: /* postfix_expression: postfix_expression '(' ')'  */
-#line 76 "grammar.y"
-                                     { (yyval.ival) = 5; }
-#line 1718 "grammar.tab.c"
-    break;
-
-  case 9: /* postfix_expression: postfix_expression '(' argument_expression_list ')'  */
-#line 77 "grammar.y"
-                                                              { (yyval.ival) = 6; }
-#line 1724 "grammar.tab.c"
-    break;
-
-  case 10: /* postfix_expression: postfix_expression '.' IDENTIFIER  */
-#line 78 "grammar.y"
-                                            { (yyval.ival) = 7; }
-#line 1730 "grammar.tab.c"
-    break;
-
-  case 11: /* postfix_expression: postfix_expression PTR_OP IDENTIFIER  */
-#line 79 "grammar.y"
-                                               { (yyval.ival) = 8; }
-#line 1736 "grammar.tab.c"
-    break;
-
-  case 12: /* postfix_expression: postfix_expression INC_OP  */
-#line 80 "grammar.y"
-                                    { (yyval.ival) = 9; }
-#line 1742 "grammar.tab.c"
-    break;
-
-  case 13: /* postfix_expression: postfix_expression DEC_OP  */
-#line 81 "grammar.y"
-                                    { (yyval.ival) = 10; }
-#line 1748 "grammar.tab.c"
-    break;
-
-  case 14: /* argument_expression_list: assignment_expression  */
-#line 85 "grammar.y"
-                                { (yyval.ival) = (yyvsp[0].ival); }
-#line 1754 "grammar.tab.c"
-    break;
-
-  case 15: /* argument_expression_list: argument_expression_list ',' assignment_expression  */
-#line 86 "grammar.y"
-                                                             { (yyval.ival) = 11; }
-#line 1760 "grammar.tab.c"
-    break;
-
-  case 16: /* unary_expression: postfix_expression  */
-#line 90 "grammar.y"
-                             { (yyval.ival) = (yyvsp[0].ival); }
-#line 1766 "grammar.tab.c"
-    break;
-
-  case 17: /* unary_expression: INC_OP unary_expression  */
-#line 91 "grammar.y"
-                                  { (yyval.ival) = 12; }
-#line 1772 "grammar.tab.c"
-    break;
-
-  case 18: /* unary_expression: DEC_OP unary_expression  */
-#line 92 "grammar.y"
-                                  { (yyval.ival) = 13; }
-#line 1778 "grammar.tab.c"
-    break;
-
-  case 19: /* unary_expression: unary_operator cast_expression  */
-#line 93 "grammar.y"
-                                         { (yyval.ival) = 14; }
-#line 1784 "grammar.tab.c"
-    break;
-
-  case 20: /* unary_expression: SIZEOF unary_expression  */
-#line 94 "grammar.y"
-                                  { (yyval.ival) = 15; }
-#line 1790 "grammar.tab.c"
-    break;
-
-  case 21: /* unary_expression: SIZEOF '(' type_name ')'  */
-#line 95 "grammar.y"
-                                   { (yyval.ival) = 16; }
-#line 1796 "grammar.tab.c"
-    break;
-
-  case 28: /* cast_expression: unary_expression  */
-#line 109 "grammar.y"
-                           { (yyval.ival) = (yyvsp[0].ival); }
-#line 1802 "grammar.tab.c"
-    break;
-
-  case 29: /* cast_expression: '(' type_name ')' cast_expression  */
-#line 110 "grammar.y"
-                                            { (yyval.ival) = 23; }
-#line 1808 "grammar.tab.c"
-    break;
-
-  case 30: /* multiplicative_expression: cast_expression  */
-#line 114 "grammar.y"
-                          { (yyval.ival) = (yyvsp[0].ival); }
-#line 1814 "grammar.tab.c"
-    break;
-
-  case 31: /* multiplicative_expression: multiplicative_expression '*' cast_expression  */
-#line 115 "grammar.y"
-                                                        { (yyval.ival) = 24; }
-#line 1820 "grammar.tab.c"
-    break;
-
-  case 32: /* multiplicative_expression: multiplicative_expression '/' cast_expression  */
-#line 116 "grammar.y"
-                                                        { (yyval.ival) = 25; }
-#line 1826 "grammar.tab.c"
-    break;
-
-  case 33: /* multiplicative_expression: multiplicative_expression '%' cast_expression  */
-#line 117 "grammar.y"
-                                                        { (yyval.ival) = 26; }
-#line 1832 "grammar.tab.c"
-    break;
-
-  case 34: /* additive_expression: multiplicative_expression  */
-#line 121 "grammar.y"
-                                    { (yyval.ival) = (yyvsp[0].ival); }
-#line 1838 "grammar.tab.c"
-    break;
-
-  case 35: /* additive_expression: additive_expression '+' multiplicative_expression  */
-#line 122 "grammar.y"
-                                                            { (yyval.ival) = 27; }
-#line 1844 "grammar.tab.c"
-    break;
-
-  case 36: /* additive_expression: additive_expression '-' multiplicative_expression  */
-#line 123 "grammar.y"
-                                                            { (yyval.ival) = 28; }
-#line 1850 "grammar.tab.c"
-    break;
-
-  case 37: /* shift_expression: additive_expression  */
-#line 127 "grammar.y"
-                              { (yyval.ival) = (yyvsp[0].ival); }
-#line 1856 "grammar.tab.c"
-    break;
-
-  case 38: /* shift_expression: shift_expression LEFT_OP additive_expression  */
-#line 128 "grammar.y"
-                                                       { (yyval.ival) = 29; }
-#line 1862 "grammar.tab.c"
-    break;
-
-  case 39: /* shift_expression: shift_expression RIGHT_OP additive_expression  */
-#line 129 "grammar.y"
-                                                        { (yyval.ival) = 30; }
-#line 1868 "grammar.tab.c"
-    break;
-
-  case 40: /* relational_expression: shift_expression  */
-#line 133 "grammar.y"
-                           { (yyval.ival) = (yyvsp[0].ival); }
-#line 1874 "grammar.tab.c"
-    break;
-
-  case 41: /* relational_expression: relational_expression '<' shift_expression  */
-#line 134 "grammar.y"
-                                                     { (yyval.ival) = 31; }
-#line 1880 "grammar.tab.c"
-    break;
-
-  case 42: /* relational_expression: relational_expression '>' shift_expression  */
-#line 135 "grammar.y"
-                                                     { (yyval.ival) = 32; }
-#line 1886 "grammar.tab.c"
-    break;
-
-  case 43: /* relational_expression: relational_expression LE_OP shift_expression  */
-#line 136 "grammar.y"
-                                                       { (yyval.ival) = 33; }
-#line 1892 "grammar.tab.c"
-    break;
-
-  case 44: /* relational_expression: relational_expression GE_OP shift_expression  */
-#line 137 "grammar.y"
-                                                       { (yyval.ival) = 34; }
-#line 1898 "grammar.tab.c"
-    break;
-
-  case 45: /* equality_expression: relational_expression  */
-#line 141 "grammar.y"
-                                { (yyval.ival) = (yyvsp[0].ival); }
-#line 1904 "grammar.tab.c"
-    break;
-
-  case 46: /* equality_expression: equality_expression EQ_OP relational_expression  */
-#line 142 "grammar.y"
-                                                          { (yyval.ival) = 35; }
-#line 1910 "grammar.tab.c"
-    break;
-
-  case 47: /* equality_expression: equality_expression NE_OP relational_expression  */
-#line 143 "grammar.y"
-                                                          { (yyval.ival) = 36; }
-#line 1916 "grammar.tab.c"
-    break;
-
-  case 48: /* and_expression: equality_expression  */
-#line 147 "grammar.y"
-                              { (yyval.ival) = (yyvsp[0].ival); }
-#line 1922 "grammar.tab.c"
-    break;
-
-  case 49: /* and_expression: and_expression '&' equality_expression  */
-#line 148 "grammar.y"
-                                                 { (yyval.ival) = 37; }
-#line 1928 "grammar.tab.c"
-    break;
-
-  case 50: /* exclusive_or_expression: and_expression  */
-#line 152 "grammar.y"
-                         { (yyval.ival) = (yyvsp[0].ival); }
-#line 1934 "grammar.tab.c"
-    break;
-
-  case 51: /* exclusive_or_expression: exclusive_or_expression '^' and_expression  */
-#line 153 "grammar.y"
-                                                     { (yyval.ival) = 38; }
-#line 1940 "grammar.tab.c"
-    break;
-
-  case 52: /* inclusive_or_expression: exclusive_or_expression  */
-#line 157 "grammar.y"
-                                  { (yyval.ival) = (yyvsp[0].ival); }
-#line 1946 "grammar.tab.c"
-    break;
-
-  case 53: /* inclusive_or_expression: inclusive_or_expression '|' exclusive_or_expression  */
-#line 158 "grammar.y"
-                                                              { (yyval.ival) = 39; }
-#line 1952 "grammar.tab.c"
-    break;
-
-  case 54: /* logical_and_expression: inclusive_or_expression  */
-#line 162 "grammar.y"
-                                  { (yyval.ival) = (yyvsp[0].ival); }
-#line 1958 "grammar.tab.c"
-    break;
-
-  case 55: /* logical_and_expression: logical_and_expression AND_OP inclusive_or_expression  */
-#line 163 "grammar.y"
-                                                                { (yyval.ival) = 40; }
-#line 1964 "grammar.tab.c"
-    break;
-
-  case 56: /* logical_or_expression: logical_and_expression  */
-#line 167 "grammar.y"
-                                 { (yyval.ival) = (yyvsp[0].ival); }
-#line 1970 "grammar.tab.c"
-    break;
-
-  case 57: /* logical_or_expression: logical_or_expression OR_OP logical_and_expression  */
-#line 168 "grammar.y"
-                                                             { (yyval.ival) = 41; }
-#line 1976 "grammar.tab.c"
-    break;
-
-  case 58: /* conditional_expression: logical_or_expression  */
-#line 172 "grammar.y"
-                                { (yyval.ival) = (yyvsp[0].ival); }
-#line 1982 "grammar.tab.c"
-    break;
-
-  case 59: /* conditional_expression: logical_or_expression '?' expression ':' conditional_expression  */
-#line 173 "grammar.y"
-                                                                          { (yyval.ival) = 42; }
-#line 1988 "grammar.tab.c"
-    break;
-
-  case 60: /* assignment_expression: conditional_expression  */
-#line 177 "grammar.y"
-                                 { (yyval.ival) = (yyvsp[0].ival); }
-#line 1994 "grammar.tab.c"
-    break;
-
-  case 61: /* assignment_expression: unary_expression assignment_operator assignment_expression  */
-#line 178 "grammar.y"
-                                                                     { (yyval.ival) = 43; }
-#line 2000 "grammar.tab.c"
-    break;
-
-  case 62: /* assignment_operator: '='  */
-#line 182 "grammar.y"
-              { (yyval.ival) = 44; }
-#line 2006 "grammar.tab.c"
-    break;
-
-  case 63: /* assignment_operator: MUL_ASSIGN  */
-#line 183 "grammar.y"
-                     { (yyval.ival) = 45; }
-#line 2012 "grammar.tab.c"
-    break;
-
-  case 64: /* assignment_operator: DIV_ASSIGN  */
-#line 184 "grammar.y"
-                     { (yyval.ival) = 46; }
-#line 2018 "grammar.tab.c"
-    break;
-
-  case 65: /* assignment_operator: MOD_ASSIGN  */
-#line 185 "grammar.y"
-                     { (yyval.ival) = 47; }
-#line 2024 "grammar.tab.c"
-    break;
-
-  case 66: /* assignment_operator: ADD_ASSIGN  */
-#line 186 "grammar.y"
-                     { (yyval.ival) = 48; }
-#line 2030 "grammar.tab.c"
-    break;
-
-  case 67: /* assignment_operator: SUB_ASSIGN  */
-#line 187 "grammar.y"
-                     { (yyval.ival) = 49; }
-#line 2036 "grammar.tab.c"
-    break;
-
-  case 68: /* assignment_operator: LEFT_ASSIGN  */
-#line 188 "grammar.y"
-                      { (yyval.ival) = 50; }
-#line 2042 "grammar.tab.c"
-    break;
-
-  case 69: /* assignment_operator: RIGHT_ASSIGN  */
-#line 189 "grammar.y"
-                       { (yyval.ival) = 51; }
-#line 2048 "grammar.tab.c"
-    break;
-
-  case 70: /* assignment_operator: AND_ASSIGN  */
-#line 190 "grammar.y"
-                     { (yyval.ival) = 52; }
-#line 2054 "grammar.tab.c"
-    break;
-
-  case 71: /* assignment_operator: XOR_ASSIGN  */
-#line 191 "grammar.y"
-                     { (yyval.ival) = 53; }
-#line 2060 "grammar.tab.c"
-    break;
-
-  case 72: /* assignment_operator: OR_ASSIGN  */
-#line 192 "grammar.y"
-                    { (yyval.ival) = 54; }
-#line 2066 "grammar.tab.c"
-    break;
-
-  case 73: /* expression: assignment_expression  */
-#line 196 "grammar.y"
-                                { (yyval.ival) = (yyvsp[0].ival); }
-#line 2072 "grammar.tab.c"
-    break;
-
-  case 74: /* expression: expression ',' assignment_expression  */
-#line 197 "grammar.y"
-                                               { (yyval.ival) = 55; }
-#line 2078 "grammar.tab.c"
-    break;
-
-  case 75: /* constant_expression: conditional_expression  */
-#line 201 "grammar.y"
-                                 { (yyval.ival) = (yyvsp[0].ival); }
-#line 2084 "grammar.tab.c"
-    break;
-
-  case 76: /* declaration: declaration_specifiers ';'  */
-#line 205 "grammar.y"
-                                     { (yyval.ival) = 56; }
-#line 2090 "grammar.tab.c"
-    break;
-
-  case 77: /* declaration: declaration_specifiers init_declarator_list ';'  */
-#line 206 "grammar.y"
-                                                          { (yyval.ival) = 57; }
-#line 2096 "grammar.tab.c"
-    break;
-
-  case 78: /* declaration_specifiers: storage_class_specifier  */
-#line 210 "grammar.y"
-                                  { (yyval.ival) = (yyvsp[0].ival); }
-#line 2102 "grammar.tab.c"
-    break;
-
-  case 79: /* declaration_specifiers: storage_class_specifier declaration_specifiers  */
-#line 211 "grammar.y"
-                                                         { (yyval.ival) = 58; }
-#line 2108 "grammar.tab.c"
-    break;
-
-  case 80: /* declaration_specifiers: type_specifier  */
-#line 212 "grammar.y"
-                         { (yyval.ival) = (yyvsp[0].ival); }
-#line 2114 "grammar.tab.c"
-    break;
-
-  case 81: /* declaration_specifiers: type_specifier declaration_specifiers  */
-#line 213 "grammar.y"
-                                                { (yyval.ival) = 59; }
-#line 2120 "grammar.tab.c"
-    break;
-
-  case 82: /* declaration_specifiers: type_qualifier  */
-#line 214 "grammar.y"
-                         { (yyval.ival) = (yyvsp[0].ival); }
-#line 2126 "grammar.tab.c"
-    break;
-
-  case 83: /* declaration_specifiers: type_qualifier declaration_specifiers  */
-#line 215 "grammar.y"
-                                                { (yyval.ival) = 60; }
-#line 2132 "grammar.tab.c"
-    break;
-
-  case 84: /* init_declarator_list: init_declarator  */
-#line 219 "grammar.y"
-                          { (yyval.ival) = (yyvsp[0].ival); }
-#line 2138 "grammar.tab.c"
-    break;
-
-  case 85: /* init_declarator_list: init_declarator_list ',' init_declarator  */
-#line 220 "grammar.y"
-                                                   { (yyval.ival) = 61; }
-#line 2144 "grammar.tab.c"
-    break;
-
-  case 86: /* init_declarator: declarator  */
-#line 224 "grammar.y"
-                     { (yyval.ival) = (yyvsp[0].ival); }
-#line 2150 "grammar.tab.c"
-    break;
-
-  case 87: /* init_declarator: declarator '=' initializer  */
-#line 225 "grammar.y"
-                                     { (yyval.ival) = 62; }
-#line 2156 "grammar.tab.c"
-    break;
-
-  case 88: /* storage_class_specifier: TYPEDEF  */
-#line 229 "grammar.y"
-                  { (yyval.ival) = 63; }
-#line 2162 "grammar.tab.c"
-    break;
-
-  case 89: /* storage_class_specifier: EXTERN  */
-#line 230 "grammar.y"
-                 { (yyval.ival) = 64; }
-#line 2168 "grammar.tab.c"
-    break;
-
-  case 90: /* storage_class_specifier: STATIC  */
-#line 231 "grammar.y"
-                 { (yyval.ival) = 65; }
-#line 2174 "grammar.tab.c"
-    break;
-
-  case 91: /* storage_class_specifier: AUTO  */
-#line 232 "grammar.y"
-               { (yyval.ival) = 66; }
-#line 2180 "grammar.tab.c"
-    break;
-
-  case 92: /* storage_class_specifier: REGISTER  */
-#line 233 "grammar.y"
-                   { (yyval.ival) = 67; }
-#line 2186 "grammar.tab.c"
-    break;
-
-  case 93: /* type_specifier: VOID  */
-#line 237 "grammar.y"
-               { (yyval.ival) = 68; }
-#line 2192 "grammar.tab.c"
-    break;
-
-  case 94: /* type_specifier: CHAR  */
-#line 238 "grammar.y"
-               { (yyval.ival) = 69; }
-#line 2198 "grammar.tab.c"
-    break;
-
-  case 95: /* type_specifier: SHORT  */
-#line 239 "grammar.y"
-                { (yyval.ival) = 70; }
-#line 2204 "grammar.tab.c"
-    break;
-
-  case 96: /* type_specifier: INT  */
-#line 240 "grammar.y"
-              { (yyval.ival) = 71; }
-#line 2210 "grammar.tab.c"
-    break;
-
-  case 97: /* type_specifier: LONG  */
-#line 241 "grammar.y"
-               { (yyval.ival) = 72; }
-#line 2216 "grammar.tab.c"
-    break;
-
-  case 98: /* type_specifier: FLOAT  */
-#line 242 "grammar.y"
-                { (yyval.ival) = 73; }
-#line 2222 "grammar.tab.c"
-    break;
-
-  case 99: /* type_specifier: DOUBLE  */
-#line 243 "grammar.y"
-                 { (yyval.ival) = 74; }
-#line 2228 "grammar.tab.c"
-    break;
-
-  case 100: /* type_specifier: SIGNED  */
-#line 244 "grammar.y"
-                 { (yyval.ival) = 75; }
-#line 2234 "grammar.tab.c"
-    break;
-
-  case 101: /* type_specifier: UNSIGNED  */
-#line 245 "grammar.y"
-                   { (yyval.ival) = 76; }
-#line 2240 "grammar.tab.c"
-    break;
-
-  case 102: /* type_specifier: struct_or_union_specifier  */
-#line 246 "grammar.y"
-                                    { (yyval.ival) = (yyvsp[0].ival); }
-#line 2246 "grammar.tab.c"
-    break;
-
-  case 103: /* type_specifier: enum_specifier  */
-#line 247 "grammar.y"
-                         { (yyval.ival) = (yyvsp[0].ival); }
-#line 2252 "grammar.tab.c"
-    break;
-
-  case 104: /* type_specifier: TYPE_NAME  */
-#line 248 "grammar.y"
-                    { (yyval.ival) = 77; }
-#line 2258 "grammar.tab.c"
-    break;
-
-  case 105: /* struct_or_union_specifier: struct_or_union IDENTIFIER '{' struct_declaration_list '}'  */
-#line 252 "grammar.y"
-                                                                     { (yyval.ival) = 78; }
-#line 2264 "grammar.tab.c"
-    break;
-
-  case 106: /* struct_or_union_specifier: struct_or_union '{' struct_declaration_list '}'  */
-#line 253 "grammar.y"
-                                                          { (yyval.ival) = 79; }
-#line 2270 "grammar.tab.c"
-    break;
-
-  case 107: /* struct_or_union_specifier: struct_or_union IDENTIFIER  */
-#line 254 "grammar.y"
-                                     { (yyval.ival) = 80; }
-#line 2276 "grammar.tab.c"
-    break;
-
-  case 108: /* struct_or_union: STRUCT  */
-#line 258 "grammar.y"
-                 { (yyval.ival) = 81; }
-#line 2282 "grammar.tab.c"
-    break;
-
-  case 109: /* struct_or_union: UNION  */
-#line 259 "grammar.y"
-                { (yyval.ival) = 82; }
-#line 2288 "grammar.tab.c"
-    break;
-
-  case 110: /* struct_declaration_list: struct_declaration  */
-#line 263 "grammar.y"
-                             { (yyval.ival) = (yyvsp[0].ival); }
-#line 2294 "grammar.tab.c"
-    break;
-
-  case 111: /* struct_declaration_list: struct_declaration_list struct_declaration  */
-#line 264 "grammar.y"
-                                                     { (yyval.ival) = 83; }
-#line 2300 "grammar.tab.c"
-    break;
-
-  case 112: /* struct_declaration: specifier_qualifier_list struct_declarator_list ';'  */
-#line 268 "grammar.y"
-                                                              { (yyval.ival) = 84; }
-#line 2306 "grammar.tab.c"
-    break;
-
-  case 113: /* specifier_qualifier_list: type_specifier specifier_qualifier_list  */
-#line 272 "grammar.y"
-                                                  { (yyval.ival) = 85; }
-#line 2312 "grammar.tab.c"
-    break;
-
-  case 114: /* specifier_qualifier_list: type_specifier  */
-#line 273 "grammar.y"
-                         { (yyval.ival) = (yyvsp[0].ival); }
-#line 2318 "grammar.tab.c"
-    break;
-
-  case 115: /* specifier_qualifier_list: type_qualifier specifier_qualifier_list  */
-#line 274 "grammar.y"
-                                                  { (yyval.ival) = 86; }
-#line 2324 "grammar.tab.c"
-    break;
-
-  case 116: /* specifier_qualifier_list: type_qualifier  */
-#line 275 "grammar.y"
-                         { (yyval.ival) = (yyvsp[0].ival); }
-#line 2330 "grammar.tab.c"
-    break;
-
-  case 117: /* struct_declarator_list: struct_declarator  */
-#line 279 "grammar.y"
-                            { (yyval.ival) = (yyvsp[0].ival); }
-#line 2336 "grammar.tab.c"
-    break;
-
-  case 118: /* struct_declarator_list: struct_declarator_list ',' struct_declarator  */
-#line 280 "grammar.y"
-                                                       { (yyval.ival) = 87; }
-#line 2342 "grammar.tab.c"
-    break;
-
-  case 119: /* struct_declarator: declarator  */
-#line 284 "grammar.y"
-                     { (yyval.ival) = (yyvsp[0].ival); }
-#line 2348 "grammar.tab.c"
-    break;
-
-  case 120: /* struct_declarator: ':' constant_expression  */
-#line 285 "grammar.y"
-                                  { (yyval.ival) = 88; }
-#line 2354 "grammar.tab.c"
-    break;
-
-  case 121: /* struct_declarator: declarator ':' constant_expression  */
-#line 286 "grammar.y"
-                                             { (yyval.ival) = 89; }
-#line 2360 "grammar.tab.c"
-    break;
-
-  case 122: /* enum_specifier: ENUM '{' enumerator_list '}'  */
-#line 290 "grammar.y"
-                                       { (yyval.ival) = 90; }
-#line 2366 "grammar.tab.c"
-    break;
-
-  case 123: /* enum_specifier: ENUM IDENTIFIER '{' enumerator_list '}'  */
-#line 291 "grammar.y"
-                                                  { (yyval.ival) = 91; }
-#line 2372 "grammar.tab.c"
-    break;
-
-  case 124: /* enum_specifier: ENUM IDENTIFIER  */
-#line 292 "grammar.y"
-                          { (yyval.ival) = 92; }
-#line 2378 "grammar.tab.c"
-    break;
-
-  case 125: /* enumerator_list: enumerator  */
-#line 296 "grammar.y"
-                     { (yyval.ival) = (yyvsp[0].ival); }
-#line 2384 "grammar.tab.c"
-    break;
-
-  case 126: /* enumerator_list: enumerator_list ',' enumerator  */
-#line 297 "grammar.y"
-                                         { (yyval.ival) = 93; }
-#line 2390 "grammar.tab.c"
-    break;
-
-  case 127: /* enumerator: IDENTIFIER  */
-#line 301 "grammar.y"
-                     { (yyval.ival) = 94; }
-#line 2396 "grammar.tab.c"
-    break;
-
-  case 128: /* enumerator: IDENTIFIER '=' constant_expression  */
-#line 302 "grammar.y"
-                                             { (yyval.ival) = 95; }
-#line 2402 "grammar.tab.c"
-    break;
-
-  case 129: /* type_qualifier: CONST  */
-#line 306 "grammar.y"
-                { (yyval.ival) = 96; }
-#line 2408 "grammar.tab.c"
-    break;
-
-  case 130: /* type_qualifier: VOLATILE  */
-#line 307 "grammar.y"
-                   { (yyval.ival) = 97; }
-#line 2414 "grammar.tab.c"
-    break;
-
-  case 131: /* declarator: pointer direct_declarator  */
-#line 311 "grammar.y"
-                                    { (yyval.ival) = 98; }
-#line 2420 "grammar.tab.c"
-    break;
-
-  case 132: /* declarator: direct_declarator  */
-#line 312 "grammar.y"
-                            { (yyval.ival) = (yyvsp[0].ival); }
-#line 2426 "grammar.tab.c"
-    break;
-
-  case 133: /* direct_declarator: IDENTIFIER  */
-#line 316 "grammar.y"
-                     { (yyval.ival) = 99; }
-#line 2432 "grammar.tab.c"
-    break;
-
-  case 134: /* direct_declarator: '(' declarator ')'  */
-#line 317 "grammar.y"
-                             { (yyval.ival) = 100; }
-#line 2438 "grammar.tab.c"
-    break;
-
-  case 135: /* direct_declarator: direct_declarator '[' constant_expression ']'  */
-#line 318 "grammar.y"
-                                                        { (yyval.ival) = 101; }
-#line 2444 "grammar.tab.c"
-    break;
-
-  case 136: /* direct_declarator: direct_declarator '[' ']'  */
-#line 319 "grammar.y"
-                                    { (yyval.ival) = 102; }
-#line 2450 "grammar.tab.c"
-    break;
-
-  case 137: /* direct_declarator: direct_declarator '(' parameter_type_list ')'  */
-#line 320 "grammar.y"
-                                                        { (yyval.ival) = 103; }
-#line 2456 "grammar.tab.c"
-    break;
-
-  case 138: /* direct_declarator: direct_declarator '(' identifier_list ')'  */
-#line 321 "grammar.y"
-                                                    { (yyval.ival) = 104; }
-#line 2462 "grammar.tab.c"
-    break;
-
-  case 139: /* direct_declarator: direct_declarator '(' ')'  */
-#line 322 "grammar.y"
-                                    { (yyval.ival) = 105; }
-#line 2468 "grammar.tab.c"
-    break;
-
-  case 140: /* pointer: '*'  */
-#line 326 "grammar.y"
-              { (yyval.ival) = 106; }
-#line 2474 "grammar.tab.c"
-    break;
-
-  case 141: /* pointer: '*' type_qualifier_list  */
-#line 327 "grammar.y"
-                                  { (yyval.ival) = 107; }
-#line 2480 "grammar.tab.c"
-    break;
-
-  case 142: /* pointer: '*' pointer  */
-#line 328 "grammar.y"
-                      { (yyval.ival) = 108; }
-#line 2486 "grammar.tab.c"
-    break;
-
-  case 143: /* pointer: '*' type_qualifier_list pointer  */
-#line 329 "grammar.y"
-                                          { (yyval.ival) = 109; }
-#line 2492 "grammar.tab.c"
-    break;
-
-  case 144: /* type_qualifier_list: type_qualifier  */
-#line 333 "grammar.y"
-                         { (yyval.ival) = (yyvsp[0].ival); }
-#line 2498 "grammar.tab.c"
-    break;
-
-  case 145: /* type_qualifier_list: type_qualifier_list type_qualifier  */
-#line 334 "grammar.y"
-                                             { (yyval.ival) = 110; }
-#line 2504 "grammar.tab.c"
-    break;
-
-  case 146: /* parameter_type_list: parameter_list  */
-#line 339 "grammar.y"
-                         { (yyval.ival) = (yyvsp[0].ival); }
-#line 2510 "grammar.tab.c"
-    break;
-
-  case 147: /* parameter_type_list: parameter_list ',' ELLIPSIS  */
-#line 340 "grammar.y"
-                                      { (yyval.ival) = 111; }
-#line 2516 "grammar.tab.c"
-    break;
-
-  case 148: /* parameter_list: parameter_declaration  */
-#line 344 "grammar.y"
-                                { (yyval.ival) = (yyvsp[0].ival); }
-#line 2522 "grammar.tab.c"
-    break;
-
-  case 149: /* parameter_list: parameter_list ',' parameter_declaration  */
-#line 345 "grammar.y"
-                                                   { (yyval.ival) = 112; }
-#line 2528 "grammar.tab.c"
-    break;
-
-  case 150: /* parameter_declaration: declaration_specifiers declarator  */
-#line 349 "grammar.y"
-                                            { (yyval.ival) = 113; }
-#line 2534 "grammar.tab.c"
-    break;
-
-  case 151: /* parameter_declaration: declaration_specifiers abstract_declarator  */
-#line 350 "grammar.y"
-                                                     { (yyval.ival) = 114; }
-#line 2540 "grammar.tab.c"
-    break;
-
-  case 152: /* parameter_declaration: declaration_specifiers  */
-#line 351 "grammar.y"
-                                 { (yyval.ival) = 115; }
-#line 2546 "grammar.tab.c"
-    break;
-
-  case 153: /* identifier_list: IDENTIFIER  */
-#line 355 "grammar.y"
-                     { (yyval.ival) = 116; }
-#line 2552 "grammar.tab.c"
-    break;
-
-  case 154: /* identifier_list: identifier_list ',' IDENTIFIER  */
-#line 356 "grammar.y"
-                                         { (yyval.ival) = 117; }
-#line 2558 "grammar.tab.c"
-    break;
-
-  case 155: /* type_name: specifier_qualifier_list  */
-#line 360 "grammar.y"
-                                   { (yyval.ival) = (yyvsp[0].ival); }
-#line 2564 "grammar.tab.c"
-    break;
-
-  case 156: /* type_name: specifier_qualifier_list abstract_declarator  */
-#line 361 "grammar.y"
-                                                       { (yyval.ival) = 118; }
-#line 2570 "grammar.tab.c"
-    break;
-
-  case 157: /* abstract_declarator: pointer  */
-#line 365 "grammar.y"
-                  { (yyval.ival) = (yyvsp[0].ival); }
-#line 2576 "grammar.tab.c"
-    break;
-
-  case 158: /* abstract_declarator: direct_abstract_declarator  */
-#line 366 "grammar.y"
-                                     { (yyval.ival) = (yyvsp[0].ival); }
-#line 2582 "grammar.tab.c"
-    break;
-
-  case 159: /* abstract_declarator: pointer direct_abstract_declarator  */
-#line 367 "grammar.y"
-                                             { (yyval.ival) = 119; }
-#line 2588 "grammar.tab.c"
-    break;
-
-  case 160: /* direct_abstract_declarator: '(' abstract_declarator ')'  */
-#line 371 "grammar.y"
-                                      { (yyval.ival) = 120; }
-#line 2594 "grammar.tab.c"
-    break;
-
-  case 161: /* direct_abstract_declarator: '[' ']'  */
-#line 372 "grammar.y"
-                  { (yyval.ival) = 121; }
-#line 2600 "grammar.tab.c"
-    break;
-
-  case 162: /* direct_abstract_declarator: '[' constant_expression ']'  */
-#line 373 "grammar.y"
-                                      { (yyval.ival) = 122; }
-#line 2606 "grammar.tab.c"
-    break;
-
-  case 163: /* direct_abstract_declarator: direct_abstract_declarator '[' ']'  */
-#line 374 "grammar.y"
-                                             { (yyval.ival) = 123; }
-#line 2612 "grammar.tab.c"
-    break;
-
-  case 164: /* direct_abstract_declarator: direct_abstract_declarator '[' constant_expression ']'  */
-#line 375 "grammar.y"
-                                                                 { (yyval.ival) = 124; }
-#line 2618 "grammar.tab.c"
-    break;
-
-  case 165: /* direct_abstract_declarator: '(' ')'  */
-#line 376 "grammar.y"
-                  { (yyval.ival) = 125; }
-#line 2624 "grammar.tab.c"
-    break;
-
-  case 166: /* direct_abstract_declarator: '(' parameter_type_list ')'  */
-#line 377 "grammar.y"
-                                      { (yyval.ival) = 126; }
-#line 2630 "grammar.tab.c"
-    break;
-
-  case 167: /* direct_abstract_declarator: direct_abstract_declarator '(' ')'  */
-#line 378 "grammar.y"
-                                             { (yyval.ival) = 127; }
-#line 2636 "grammar.tab.c"
-    break;
-
-  case 168: /* direct_abstract_declarator: direct_abstract_declarator '(' parameter_type_list ')'  */
-#line 379 "grammar.y"
-                                                                 { (yyval.ival) = 128; }
-#line 2642 "grammar.tab.c"
-    break;
-
-  case 169: /* initializer: assignment_expression  */
-#line 383 "grammar.y"
-                                { (yyval.ival) = (yyvsp[0].ival); }
-#line 2648 "grammar.tab.c"
-    break;
-
-  case 170: /* initializer: '{' initializer_list '}'  */
-#line 384 "grammar.y"
-                                   { (yyval.ival) = 129; }
-#line 2654 "grammar.tab.c"
-    break;
-
-  case 171: /* initializer: '{' initializer_list ',' '}'  */
-#line 385 "grammar.y"
-                                       { (yyval.ival) = 130; }
-#line 2660 "grammar.tab.c"
-    break;
-
-  case 172: /* initializer_list: initializer  */
-#line 389 "grammar.y"
-                      { (yyval.ival) = (yyvsp[0].ival); }
-#line 2666 "grammar.tab.c"
-    break;
-
-  case 173: /* initializer_list: initializer_list ',' initializer  */
-#line 390 "grammar.y"
-                                           { (yyval.ival) = 131; }
-#line 2672 "grammar.tab.c"
-    break;
-
-  case 174: /* statement: labeled_statement  */
-#line 394 "grammar.y"
-                            { (yyval.ival) = (yyvsp[0].ival); }
-#line 2678 "grammar.tab.c"
-    break;
-
-  case 175: /* statement: compound_statement  */
-#line 395 "grammar.y"
-                             { (yyval.ival) = (yyvsp[0].ival); }
-#line 2684 "grammar.tab.c"
-    break;
-
-  case 176: /* statement: expression_statement  */
-#line 396 "grammar.y"
-                               { (yyval.ival) = (yyvsp[0].ival); }
-#line 2690 "grammar.tab.c"
-    break;
-
-  case 177: /* statement: selection_statement  */
-#line 397 "grammar.y"
-                              { (yyval.ival) = (yyvsp[0].ival); }
-#line 2696 "grammar.tab.c"
-    break;
-
-  case 178: /* statement: iteration_statement  */
-#line 398 "grammar.y"
-                              { (yyval.ival) = (yyvsp[0].ival); }
-#line 2702 "grammar.tab.c"
-    break;
-
-  case 179: /* statement: jump_statement  */
-#line 399 "grammar.y"
-                         { (yyval.ival) = (yyvsp[0].ival); }
-#line 2708 "grammar.tab.c"
-    break;
-
-  case 180: /* labeled_statement: IDENTIFIER ':' statement  */
-#line 403 "grammar.y"
-                                   { (yyval.ival) = 132; }
-#line 2714 "grammar.tab.c"
-    break;
-
-  case 181: /* labeled_statement: CASE constant_expression ':' statement  */
-#line 404 "grammar.y"
-                                                 { (yyval.ival) = 133; }
-#line 2720 "grammar.tab.c"
-    break;
-
-  case 182: /* labeled_statement: DEFAULT ':' statement  */
-#line 405 "grammar.y"
-                                { (yyval.ival) = 134; }
-#line 2726 "grammar.tab.c"
-    break;
-
-  case 183: /* compound_statement: '{' '}'  */
-#line 409 "grammar.y"
-                  { (yyval.ival) = 135; }
-#line 2732 "grammar.tab.c"
-    break;
-
-  case 184: /* compound_statement: '{' statement_list '}'  */
-#line 410 "grammar.y"
-                                 { (yyval.ival) = 136; }
-#line 2738 "grammar.tab.c"
-    break;
-
-  case 185: /* compound_statement: '{' declaration_list '}'  */
-#line 411 "grammar.y"
-                                   { (yyval.ival) = 137; }
-#line 2744 "grammar.tab.c"
-    break;
-
-  case 186: /* compound_statement: '{' declaration_list statement_list '}'  */
-#line 412 "grammar.y"
-                                                  { (yyval.ival) = 138; }
-#line 2750 "grammar.tab.c"
-    break;
-
-  case 187: /* declaration_list: declaration  */
-#line 416 "grammar.y"
-                      { (yyval.ival) = (yyvsp[0].ival); }
-#line 2756 "grammar.tab.c"
-    break;
-
-  case 188: /* declaration_list: declaration_list declaration  */
-#line 417 "grammar.y"
-                                       { (yyval.ival) = 139; }
-#line 2762 "grammar.tab.c"
-    break;
-
-  case 189: /* statement_list: statement  */
-#line 421 "grammar.y"
-                    { (yyval.ival) = (yyvsp[0].ival); }
-#line 2768 "grammar.tab.c"
-    break;
-
-  case 190: /* statement_list: statement_list statement  */
-#line 422 "grammar.y"
-                                   { (yyval.ival) = 140; }
-#line 2774 "grammar.tab.c"
-    break;
-
-  case 191: /* expression_statement: ';'  */
-#line 426 "grammar.y"
-              { (yyval.ival) = 141; }
-#line 2780 "grammar.tab.c"
-    break;
-
-  case 192: /* expression_statement: expression ';'  */
-#line 427 "grammar.y"
-                         { (yyval.ival) = 142; }
-#line 2786 "grammar.tab.c"
-    break;
-
-  case 193: /* selection_statement: IF '(' expression ')' statement  */
-#line 431 "grammar.y"
-                                          { (yyval.ival) = 143; }
-#line 2792 "grammar.tab.c"
-    break;
-
-  case 194: /* selection_statement: IF '(' expression ')' statement ELSE statement  */
-#line 432 "grammar.y"
-                                                         { (yyval.ival) = 144; }
-#line 2798 "grammar.tab.c"
-    break;
-
-  case 195: /* selection_statement: SWITCH '(' expression ')' statement  */
-#line 433 "grammar.y"
-                                              { (yyval.ival) = 145; }
-#line 2804 "grammar.tab.c"
-    break;
-
-  case 196: /* iteration_statement: WHILE '(' expression ')' statement  */
-#line 437 "grammar.y"
-                                             { (yyval.ival) = 146; }
-#line 2810 "grammar.tab.c"
-    break;
-
-  case 197: /* iteration_statement: DO statement WHILE '(' expression ')' ';'  */
-#line 438 "grammar.y"
-                                                    { (yyval.ival) = 147; }
-#line 2816 "grammar.tab.c"
-    break;
-
-  case 198: /* iteration_statement: FOR '(' expression_statement expression_statement ')' statement  */
-#line 439 "grammar.y"
-                                                                          { (yyval.ival) = 148; }
-#line 2822 "grammar.tab.c"
-    break;
-
-  case 199: /* iteration_statement: FOR '(' expression_statement expression_statement expression ')' statement  */
-#line 440 "grammar.y"
-                                                                                     { (yyval.ival) = 149; }
-#line 2828 "grammar.tab.c"
-    break;
-
-  case 200: /* jump_statement: GOTO IDENTIFIER ';'  */
-#line 444 "grammar.y"
-                              { (yyval.ival) = 150; }
-#line 2834 "grammar.tab.c"
-    break;
-
-  case 201: /* jump_statement: CONTINUE ';'  */
-#line 445 "grammar.y"
-                       { (yyval.ival) = 151; }
-#line 2840 "grammar.tab.c"
-    break;
-
-  case 202: /* jump_statement: BREAK ';'  */
-#line 446 "grammar.y"
-                    { (yyval.ival) = 152; }
-#line 2846 "grammar.tab.c"
-    break;
-
-  case 203: /* jump_statement: RETURN ';'  */
-#line 447 "grammar.y"
-                     { (yyval.ival) = 153; }
-#line 2852 "grammar.tab.c"
-    break;
-
-  case 204: /* jump_statement: RETURN expression ';'  */
-#line 448 "grammar.y"
-                                { (yyval.ival) = 154; }
-#line 2858 "grammar.tab.c"
-    break;
-
-  case 205: /* translation_unit: external_declaration  */
-#line 452 "grammar.y"
-                               { (yyval.ival) = (yyvsp[0].ival); }
-#line 2864 "grammar.tab.c"
-    break;
-
-  case 206: /* translation_unit: translation_unit external_declaration  */
-#line 453 "grammar.y"
-                                                { (yyval.ival) = 155; }
-#line 2870 "grammar.tab.c"
-    break;
-
-  case 207: /* external_declaration: function_definition  */
-#line 457 "grammar.y"
-                              { (yyval.ival) = (yyvsp[0].ival); }
-#line 2876 "grammar.tab.c"
-    break;
-
-  case 208: /* external_declaration: declaration  */
-#line 458 "grammar.y"
-                      { (yyval.ival) = (yyvsp[0].ival); }
-#line 2882 "grammar.tab.c"
-    break;
-
-  case 209: /* function_definition: declaration_specifiers declarator declaration_list compound_statement  */
-#line 462 "grammar.y"
-                                                                                { (yyval.ival) = 156; }
-#line 2888 "grammar.tab.c"
-    break;
-
-  case 210: /* function_definition: declaration_specifiers declarator compound_statement  */
-#line 463 "grammar.y"
-                                                               { (yyval.ival) = 157; }
-#line 2894 "grammar.tab.c"
-    break;
-
-  case 211: /* function_definition: declarator declaration_list compound_statement  */
-#line 464 "grammar.y"
-                                                         { (yyval.ival) = 158; }
-#line 2900 "grammar.tab.c"
-    break;
-
-  case 212: /* function_definition: declarator compound_statement  */
-#line 465 "grammar.y"
-                                        { (yyval.ival) = 159; }
-#line 2906 "grammar.tab.c"
-    break;
-
-
-#line 2910 "grammar.tab.c"
 
       default: break;
     }
@@ -3099,7 +1877,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 468 "grammar.y"
+#line 474 "grammar.y"
 
 
 #include <iostream>
@@ -3113,12 +1891,23 @@ void yyerror(const char *s) {
     fprintf(stderr, "Error: %s at line %d\n", s, line);
 }
 
-// Symbol table (you might need this from your lexer)
-//extern unordered_map<string, string> symtab;
-//extern vector<string> program;
-//extern vector<pair<string, int>> error;
-//extern int line;
-//extern bool iserror;
+// Define the global variables here
+bool iserror = false;
+int line = 1;
+vector<pair<string, int>> error;
+unordered_map<string, string> symtab;
+vector<string> program;
+
+// Define the new symbol table
+
+unordered_map<string, SymbolInfo> new_symtab;
+
+void add_to_token_table(string token, string type) {
+    SymbolInfo info;
+    info.token = token;
+    info.type = type;
+    new_symtab[token] = info;
+}
 
 int main(int argc, char *argv[]) {
     string inputFileName, outputFileName;
@@ -3161,8 +1950,9 @@ int main(int argc, char *argv[]) {
              if(err.first!="unterminated comment")outputFile << "invalid character : " << err.first << " at line no. " << err.second << endl;
             else outputFile  << err.first << " at line no. " << err.second << endl;
         }
-    } else {
-        outputFile << "Symbol Table:\n";
+    } 
+	else {
+        outputFile << "Original Symbol Table:\n";
         outputFile << "-------------------------------------------------------------------------------\n";
         outputFile << "| Lexeme                                | Token                                 |\n";
         outputFile << "-------------------------------------------------------------------------------\n";
@@ -3182,14 +1972,27 @@ int main(int argc, char *argv[]) {
                 }
             }
         }
-
         outputFile << "-------------------------------------------------------------------------------\n";
         outputFile << '\n';
 
+        outputFile << "\nNew Symbol Table (Tokens and Types):\n";
+        outputFile << "-------------------------------------------------------------------------------\n";
+        outputFile << "| Lexeme                | Token                 | Type                  |\n";
+        outputFile << "-------------------------------------------------------------------------------\n";
+
+        for (const auto &entry : new_symtab) {
+            outputFile << "| " << setw(20) << left << entry.first
+                       << " | " << setw(20) << left << entry.second.token
+                       << " | " << setw(20) << left << entry.second.type << " |\n";
+        }
+
+        outputFile << "-------------------------------------------------------------------------------\n";
+        outputFile << '\n';
         outputFile << "whole program after separation:\n";
         for (const auto &i : program) {
             outputFile << "|" << i << "|\n";
         }
+
     }
 
     fclose(inputFile);
