@@ -2,48 +2,47 @@ Original Symbol Table:
 -------------------------------------------------------------------------------
 | Lexeme                                | Token                                 |
 -------------------------------------------------------------------------------
-| 0                                    | INTEGER                              |
-| return                               | RETURN                               |
-| }                                    | SEPERATOR                            |
-| 20                                   | INTEGER                              |
-| x                                    | IDENTIFIER                           |
-| !                                    | NOT                                  |
-| 0xFF                                 | CONSTANT HEX                         |
-| ^=                                   | XOR_ASSIGN                           |
-| 0x10                                 | CONSTANT HEX                         |
-| 0xF                                  | CONSTANT HEX                         |
-| &=                                   | AND_ASSIGN                           |
-| c                                    | IDENTIFIER                           |
-| int                                  | INT                                  |
-| 4                                    | INTEGER                              |
+| sum                                  | IDENTIFIER                           |
+| &                                    | BITWISE_AND                          |
 | ptr                                  | IDENTIFIER                           |
-| 3                                    | INTEGER                              |
 | *                                    | MUL                                  |
-| ,                                    | SEPERATOR                            |
-| ~                                    | BITWISE_NOT                          |
-| if                                   | IF                                   |
+| ?                                    | QUESTION MARK                        |
+| >                                    | GREATERTHAN                          |
+| x                                    | IDENTIFIER                           |
+| {                                    | SEPERATOR                            |
 | ;                                    | SEPERATOR                            |
 | b                                    | IDENTIFIER                           |
-| /=                                   | DIV_ASSIGN                           |
-| |=                                   | OR_ASSIGN                            |
-| {                                    | SEPERATOR                            |
-| )                                    | SEPERATOR                            |
-| (                                    | SEPERATOR                            |
-| *=                                   | MUL_ASSIGN                           |
-| main                                 | IDENTIFIER                           |
-| =                                    | ASSIGN                               |
-| a                                    | IDENTIFIER                           |
-| 5                                    | INTEGER                              |
-| &                                    | BITWISE_AND                          |
-| unsigned                             | UNSIGNED                             |
-| +=                                   | ADD_ASSIGN                           |
+| .                                    | SEPERATOR                            |
+| |                                    | OR                                   |
+| Color                                | IDENTIFIER                           |
 | 10                                   | INTEGER                              |
-| 2                                    | INTEGER                              |
-| %=                                   | MOD_ASSIGN                           |
-| <<=                                  | LEFT_ASSIGN                          |
-| -                                    | MINUS                                |
-| >>=                                  | RIGHT_ASSIGN                         |
+| }                                    | SEPERATOR                            |
+| 3                                    | INTEGER                              |
+| =                                    | ASSIGN                               |
+| main                                 | IDENTIFIER                           |
+| :                                    | SEPERATOR                            |
 | 1                                    | INTEGER                              |
+| globalVar                            | IDENTIFIER                           |
+| y                                    | IDENTIFIER                           |
+| int                                  | INT                                  |
+| RED                                  | IDENTIFIER                           |
+| (                                    | SEPERATOR                            |
+| return                               | RETURN                               |
+| max                                  | IDENTIFIER                           |
+| GREEN                                | IDENTIFIER                           |
+| enum                                 | ENUM                                 |
+| add                                  | IDENTIFIER                           |
+| ,                                    | SEPERATOR                            |
+| BLUE                                 | IDENTIFIER                           |
+| 5                                    | INTEGER                              |
+| a                                    | IDENTIFIER                           |
+| Point                                | IDENTIFIER                           |
+| <<                                   | LEFT_OP                              |
+| )                                    | SEPERATOR                            |
+| p                                    | IDENTIFIER                           |
+| struct                               | STRUCT                               |
+| +                                    | PLUS                                 |
+| bitwise                              | IDENTIFIER                           |
 -------------------------------------------------------------------------------
 
 
@@ -51,104 +50,117 @@ New Symbol Table (Tokens and Types):
 -------------------------------------------------------------------------------
 | Token                 | Type                  |
 -------------------------------------------------------------------------------
-| x                    | INT                 
-| c                    | UNSIGNED            
 | ptr                  | INT                 
-| b                    | INT                 
-| a                    | INT                 
 | main                 | INT function        
+| b                    | INT                 
+| max                  | INT                 
+| a                    | INT                 
+| add                  | INT function        
+| y                    | INT                 
+| x                    | INT                 
+| bitwise              | INT                 
+| globalVar            | INT                 
 -------------------------------------------------------------------------------
 
 whole program after separation:
+|int|
+|globalVar|
+|=|
+|10|
+|;|
+|struct|
+|Point|
+|{|
+|int|
+|x|
+|;|
+|int|
+|y|
+|;|
+|}|
+|;|
+|enum|
+|Color|
+|{|
+|RED|
+|,|
+|GREEN|
+|,|
+|BLUE|
+|}|
+|;|
+|int|
+|add|
+|(|
+|int|
+|a|
+|,|
+|int|
+|b|
+|)|
+|{|
+|return|
+|a|
+|+|
+|b|
+|;|
+|}|
 |int|
 |main|
 |(|
 |)|
 |{|
 |int|
-|a|
-|,|
-|b|
+|bitwise|
+|=|
+|(|
+|1|
+|<<|
+|3|
+|)|
+|||
+|(|
+|1|
+|<<|
+|5|
+|)|
+|;|
+|int|
+|max|
+|=|
+|(|
+|p|
+|.|
+|x|
+|>|
+|p|
+|.|
+|y|
+|)|
+|?|
+|p|
+|.|
+|x|
+|:|
+|p|
+|.|
+|y|
 |;|
 |int|
 |*|
-|ptr|
-|;|
-|int|
-|unsigned|
-|c|
-|;|
-|a|
-|=|
-|5|
-|;|
-|b|
-|=|
-|-|
-|a|
-|;|
 |ptr|
 |=|
 |&|
-|a|
+|globalVar|
 |;|
-|c|
+|sum|
 |=|
-|~|
-|a|
-|;|
-|a|
-|+=|
-|10|
-|;|
-|b|
-|*=|
-|2|
-|;|
-|c|
-|/=|
-|3|
-|;|
-|a|
-|%=|
-|4|
-|;|
-|b|
-|<<=|
-|2|
-|;|
-|c|
-|>>=|
-|1|
-|;|
-|a|
-|&=|
-|0xF|
-|;|
-|b|
-||=|
-|0x10|
-|;|
-|c|
-|^=|
-|0xFF|
-|;|
-|if|
+|add|
 |(|
-|!|
-|a|
-|)|
-|{|
-|int|
-|x|
-|;|
 |*|
 |ptr|
-|=|
-|20|
+|,|
+|5|
+|)|
 |;|
-|}|
-|return|
-|0|
-|;|
-|}|
+|struct|
