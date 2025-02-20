@@ -1,0 +1,132 @@
+Symbol Table:
+-------------------------------------------------------------------------------
+| Lexeme                                | Token                                 |
+-------------------------------------------------------------------------------
+| return                               | KEYWORD                              |
+| 1                                    | INTEGER                              |
+| "Invalid data entry.\nPlease try again." | STRING LITERAL                       |
+| greeting                             | IDENTIFIER                           |
+| *                                    | MUL                                  |
+| const                                | KEYWORD                              |
+| 1234567890                           | INTEGER                              |
+| salary                               | IDENTIFIER                           |
+| ulong                                | IDENTIFIER                           |
+| 50                                   | INTEGER                              |
+| id                                   | IDENTIFIER                           |
+| ]                                    | SEPERATOR                            |
+| ;                                    | SEPERATOR                            |
+| name                                 | IDENTIFIER                           |
+| errorMsg                             | IDENTIFIER                           |
+| int                                  | KEYWORD                              |
+| char                                 | KEYWORD                              |
+| {                                    | SEPERATOR                            |
+| 0                                    | INTEGER                              |
+| +                                    | PLUS                                 |
+| Employee                             | IDENTIFIER                           |
+| float                                | KEYWORD                              |
+| struct                               | KEYWORD                              |
+| grade                                | IDENTIFIER                           |
+| typedef                              | KEYWORD                              |
+| }                                    | SEPERATOR                            |
+| unsigned                             | KEYWORD                              |
+| (                                    | SEPERATOR                            |
+| main                                 | IDENTIFIER                           |
+| "Hello, Employee!"                   | STRING LITERAL                       |
+| emp1                                 | IDENTIFIER                           |
+| =                                    | ASSIGN                               |
+| )                                    | SEPERATOR                            |
+| 50000.50                             | CONSTANT FLOAT                       |
+| .                                    | SEPERATOR                            |
+| 101                                  | INTEGER                              |
+| [                                    | SEPERATOR                            |
+| 'A'                                  | CONSTANT CHAR                        |
+| long                                 | KEYWORD                              |
+| bigNumber                            | IDENTIFIER                           |
+-------------------------------------------------------------------------------
+
+whole program after separation:
+|typedef|
+|struct|
+|{|
+|int|
+|id|
+|;|
+|float|
+|salary|
+|;|
+|char|
+|grade|
+|;|
+|char|
+|name|
+|[|
+|50|
+|]|
+|;|
+|}|
+|Employee|
+|;|
+|typedef|
+|unsigned|
+|long|
+|ulong|
+|;|
+|int|
+|main|
+|(|
+|)|
+|{|
+|Employee|
+|emp1|
+|;|
+|emp1|
+|.|
+|id|
+|=|
+|101|
+|;|
+|emp1|
+|.|
+|salary|
+|=|
+|50000.50|
+|;|
+|emp1|
+|.|
+|grade|
+|=|
+|'A'|
+|;|
+|ulong|
+|bigNumber|
+|=|
+|1234567890|
+|;|
+|const|
+|char|
+|*|
+|greeting|
+|=|
+|"Hello, Employee!"|
+|;|
+|const|
+|char|
+|*|
+|errorMsg|
+|=|
+|"Invalid data entry.\nPlease try again."|
+|;|
+|emp1|
+|.|
+|id|
+|=|
+|emp1|
+|.|
+|id|
+|+|
+|1|
+|;|
+|return|
+|0|
+|;|
+|}|

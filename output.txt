@@ -1,0 +1,35 @@
+Symbol Table:
+-------------------------------------------------------------------------------
+| Lexeme                                | Token                                 |
+-------------------------------------------------------------------------------
+| iv                                   | IDENTIFIER                           |
+| int                                  | KEYWORD                              |
+| a                                    | IDENTIFIER                           |
+| =                                    | ASSIGN                               |
+| }                                    | SEPERATOR                            |
+| ;                                    | SEPERATOR                            |
+| *                                    | MUL                                  |
+| i                                    | IDENTIFIER                           |
+| char                                 | KEYWORD                              |
+| b                                    | IDENTIFIER                           |
+| {                                    | SEPERATOR                            |
+| P                                    | IDENTIFIER                           |
+| struct                               | KEYWORD                              |
+-------------------------------------------------------------------------------
+
+whole program after separation:
+|struct|
+|P|
+|{|
+|char|
+|i|
+|;|
+|}|
+|int|
+|iv|
+|=|
+|a|
+|*|
+|*|
+|b|
+|;|

@@ -1,0 +1,51 @@
+
+
+// Define a struct
+struct Point {
+    int x, y;
+    char i;
+    void display() { std::cout << "(" << x << ", " << y << ")\n"; }
+};
+
+// Define an enum
+enum Color { RED, GREEN, BLUE };
+
+// Function using reference
+void increment(int &reference) {
+    reference++;
+}
+
+// Overloading an operator
+class Number {
+public:
+    int value;
+    Number(int v) : value(v) {}
+    Number operator+(const Number &other) { return Number(value + other.value); }
+};
+
+int main() {
+    struct Point p1 = {10, 20};
+    p1.display();
+
+    // Enum usage
+    enum Color myColor = GREEN;
+
+    // Switch case
+    switch (myColor) {
+        case RED: std::cout << "Red\n"; break;
+        case GREEN: std::cout << "Green\n"; break;
+        case BLUE: std::cout << "Blue\n"; break;
+    }
+
+    // Reference usage
+    int num = 5;
+    increment(num);
+    std::cout << "Incremented num: " << num << "\n";
+
+    // Operator overloading
+    Number n1(3), n2(4);
+    Number n3 = n1 + n2;
+    std::cout << "Sum: " << n3.value << "\n";
+
+    return 0;
+}

@@ -1,0 +1,2 @@
+to run write follwing command in project root directory:
+./run.sh -i <test_file_path> -o <output_file_path>

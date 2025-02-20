@@ -1,0 +1,13 @@
+int main() {
+    float a = 3.14, b = 2.71, c = 1.23e-4;
+    char ch = 'A';
+    char newline = '\n';
+    char tab = '\t';
+    
+    string greeting = "Hello, World!";
+    string escape = "New\nLine and Tab\tCharacter";
+
+    a = a + b * c - 0.001;
+    
+    return 0;
+}

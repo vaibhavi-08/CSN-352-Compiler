@@ -1,0 +1,9 @@
+int main() {
+    float num = 12.34.56;   // Lexical error: multiple dots in a number
+    char ch = 'AB';         // Lexical error: multiple characters in a char literal
+    string msg = "Hello;    // Lexical error: missing closing quote
+    int 123var = 10;        // Lexical error: identifier starting with a number
+    $invalid_token = 5;     // Lexical error: invalid character $
+    
+    return 0;
+}

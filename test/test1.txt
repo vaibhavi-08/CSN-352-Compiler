@@ -1,0 +1,15 @@
+//htis code is for identifying odd/even
+/* this
+    is && *
+    to test multiline comment */
+int main() {
+    #int i;
+    for (i = 0; i < 10; i++) {
+        if (i % 2 == 0) {
+            printf("%d is even\n", i);
+        } else {
+            printf("%d is odd\n", i);
+        }
+    }
+    return 0;
+}
