@@ -17,12 +17,9 @@ extern vector<pair<string, int>> error;
 extern int line;
 extern bool iserror;
 
-// New symbol table for tokens and their types
-struct SymbolInfo {
-    string token;
-    string type;
-};
-extern unordered_map<string, SymbolInfo> new_symtab;
+
+
+extern unordered_map<string, string> new_symtab;
 
 // current Type declaration
 string currentType = "";
@@ -104,13 +101,19 @@ unary_expression
 	;
 
 unary_operator
-    : '&'
-    | '*'
-    | '+'
-    | '-'
-    | '~'
-    | '!'
+    : '&' { $$ = "&"; currentType = "POINTER_TO_" + currentType; }
+    | '*' { $$ = "*"; 
+            if (currentType.substr(0, 11) == "POINTER_TO_") 
+                currentType = currentType.substr(11);
+            else
+                currentType = "POINTER_TO_" + currentType; 
+          }
+    | '+' { $$ = "+"; /* No change to currentType */ }
+    | '-' { $$ = "-"; /* No change to currentType */ }
+    | '~' { $$ = "~"; currentType = "INT"; } // Bitwise NOT is typically used with integral types
+    | '!' { $$ = "!"; currentType = "INT"; } // Logical NOT typically results in a boolean (int in C)
     ;
+
 
 cast_expression
 	: unary_expression
@@ -186,18 +189,18 @@ assignment_expression
 	;
 
 assignment_operator
-	: '='
-	| MUL_ASSIGN
-	| DIV_ASSIGN
-	| MOD_ASSIGN
-	| ADD_ASSIGN
-	| SUB_ASSIGN
-	| LEFT_ASSIGN
-	| RIGHT_ASSIGN
-	| AND_ASSIGN
-	| XOR_ASSIGN
-	| OR_ASSIGN
-	;
+    : '='           { $$ = "="; /* No change to currentType */ }
+    | MUL_ASSIGN    { $$ = "*="; /* No change to currentType */ }
+    | DIV_ASSIGN    { $$ = "/="; /* No change to currentType */ }
+    | MOD_ASSIGN    { $$ = "%="; currentType = "INT"; } // Modulo typically results in an integer
+    | ADD_ASSIGN    { $$ = "+="; /* No change to currentType */ }
+    | SUB_ASSIGN    { $$ = "-="; /* No change to currentType */ }
+    | LEFT_ASSIGN   { $$ = "<<="; currentType = "INT"; } // Bit shifting typically results in an integer
+    | RIGHT_ASSIGN  { $$ = ">>="; currentType = "INT"; } // Bit shifting typically results in an integer
+    | AND_ASSIGN    { $$ = "&="; currentType = "INT"; } // Bitwise AND typically results in an integer
+    | XOR_ASSIGN    { $$ = "^="; currentType = "INT"; } // Bitwise XOR typically results in an integer
+    | OR_ASSIGN     { $$ = "|="; currentType = "INT"; } // Bitwise OR typically results in an integer
+    ;
 
 expression
 	: assignment_expression
@@ -241,19 +244,20 @@ storage_class_specifier
 	;
 
 type_specifier
-	: VOID
-	| CHAR
-	| SHORT
-	| INT
-	| LONG
-	| FLOAT
-	| DOUBLE
-	| SIGNED
-	| UNSIGNED
-	| struct_or_union_specifier
-	| enum_specifier
-	| TYPE_NAME
+	: VOID   { currentType = "VOID"; }
+	| CHAR   { currentType = "CHAR"; }
+	| SHORT  { currentType = "SHORT"; }
+	| INT    { currentType = "INT"; }
+	| LONG   { currentType = "LONG"; }
+	| FLOAT  { currentType = "FLOAT"; }
+	| DOUBLE { currentType = "DOUBLE"; }
+	| SIGNED { currentType = "SIGNED"; }
+	| UNSIGNED { currentType = "UNSIGNED"; }
+	| struct_or_union_specifier { currentType = "STRUCT"; } // Simplified, you might want to handle this more specifically
+	| enum_specifier { currentType = "ENUM"; } // Simplified, you might want to handle this more specifically
+	| TYPE_NAME { currentType = "TYPE_NAME"; } // You might want to handle this differently depending on your needs
 	;
+
 
 struct_or_union_specifier
 	: struct_or_union IDENTIFIER '{' struct_declaration_list '}'
@@ -320,13 +324,40 @@ declarator
 	;
 
 direct_declarator
-	: IDENTIFIER 
-	| '(' declarator ')'
-	| direct_declarator '[' constant_expression ']'
-	| direct_declarator '[' ']'
-	| direct_declarator '(' parameter_type_list ')'
-	| direct_declarator '(' identifier_list ')'
-	| direct_declarator '(' ')'
+	: IDENTIFIER { 
+		add_to_token_table($1, currentType);
+		$$ = $1; // Propagate the identifier up the parse tree
+	}
+	| '(' declarator ')' { $$ = $2; }
+	| direct_declarator '[' constant_expression ']' { 
+		// For array types, you might want to append [] to the type
+		string arrayType = currentType + "[]";
+		add_to_token_table($1, arrayType);
+		$$ = $1;
+	}
+	| direct_declarator '[' ']' {
+		string arrayType = currentType + "[]";
+		add_to_token_table($1, arrayType);
+		$$ = $1;
+	}
+	| direct_declarator '(' parameter_type_list ')' {
+		// For function types, you might want to handle this differently
+		string funcType = currentType + " function";
+		add_to_token_table($1, funcType);
+		$$ = $1;
+	}
+	| direct_declarator '(' identifier_list ')' {
+		string funcType = currentType + " function";
+		add_to_token_table($1, funcType);
+		$$ = $1;
+	}
+	| direct_declarator '(' ')' {
+		string funcType = currentType + " function";
+		add_to_token_table($1, funcType);
+		$$ = $1;
+	}
+	;
+
 	;
 
 pointer
@@ -493,13 +524,10 @@ vector<string> program;
 
 // Define the new symbol table
 
-unordered_map<string, SymbolInfo> new_symtab;
+unordered_map<string, string> new_symtab;
 
 void add_to_token_table(string token, string type) {
-    SymbolInfo info;
-    info.token = token;
-    info.type = type;
-    new_symtab[token] = info;
+    new_symtab[token] = type;
 }
 
 int main(int argc, char *argv[]) {
@@ -570,13 +598,12 @@ int main(int argc, char *argv[]) {
 
         outputFile << "\nNew Symbol Table (Tokens and Types):\n";
         outputFile << "-------------------------------------------------------------------------------\n";
-        outputFile << "| Lexeme                | Token                 | Type                  |\n";
+        outputFile << "| Token                 | Type                  |\n";
         outputFile << "-------------------------------------------------------------------------------\n";
 
         for (const auto &entry : new_symtab) {
             outputFile << "| " << setw(20) << left << entry.first
-                       << " | " << setw(20) << left << entry.second.token
-                       << " | " << setw(20) << left << entry.second.type << " |\n";
+                       << " | " << setw(20) << left << entry.second << "\n";
         }
 
         outputFile << "-------------------------------------------------------------------------------\n";

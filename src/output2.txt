@@ -2,91 +2,77 @@ Original Symbol Table:
 -------------------------------------------------------------------------------
 | Lexeme                                | Token                                 |
 -------------------------------------------------------------------------------
-| else                                 | ELSE                                 |
-| }                                    | SEPERATOR                            |
-| ==                                   | EQ_OP                                |
-| 2                                    | INTEGER                              |
-| %                                    | MOD                                  |
-| "%d is even\n"                       | STRING LITERAL                       |
-| if                                   | IF                                   |
+| l                                    | IDENTIFIER                           |
+| ui                                   | IDENTIFIER                           |
+| long                                 | LONG                                 |
+| s                                    | IDENTIFIER                           |
+| short                                | SHORT                                |
+| compute                              | IDENTIFIER                           |
 | int                                  | INT                                  |
-| ++                                   | INC_OP                               |
-| return                               | RETURN                               |
-| "%d is odd\n"                        | STRING LITERAL                       |
-| (                                    | SEPERATOR                            |
-| )                                    | SEPERATOR                            |
-| printf                               | IDENTIFIER                           |
-| {                                    | SEPERATOR                            |
+| float                                | FLOAT                                |
+| sum                                  | IDENTIFIER                           |
+| a                                    | IDENTIFIER                           |
+| bool                                 | BOOL                                 |
+| }                                    | SEPERATOR                            |
+| h                                    | IDENTIFIER                           |
 | ,                                    | SEPERATOR                            |
-| <                                    | LESSTHAN                             |
+| double                               | DOUBLE                               |
 | ;                                    | SEPERATOR                            |
-| main                                 | IDENTIFIER                           |
-| for                                  | FOR                                  |
-| i                                    | IDENTIFIER                           |
-| =                                    | ASSIGN                               |
-| 0                                    | INTEGER                              |
-| 10                                   | INTEGER                              |
+| b                                    | IDENTIFIER                           |
+| )                                    | SEPERATOR                            |
+| {                                    | SEPERATOR                            |
+| unsigned                             | UNSIGNED                             |
+| (                                    | SEPERATOR                            |
+| return                               | RETURN                               |
+| +                                    | PLUS                                 |
 -------------------------------------------------------------------------------
 
 
 New Symbol Table (Tokens and Types):
 -------------------------------------------------------------------------------
-| Lexeme                | Token                 | Type                  |
+| Token                 | Type                  |
 -------------------------------------------------------------------------------
+| ui                   | UNSIGNED            
+| l                    | LONG                
+| s                    | SHORT               
+| compute              | DOUBLE              
+| h                    | INT function        
+| b                    | DOUBLE              
+| a                    | FLOAT               
+| sum                  | DOUBLE function     
 -------------------------------------------------------------------------------
 
 whole program after separation:
-|int|
-|main|
+|float|
+|sum|
 |(|
-|)|
-|{|
-|int|
-|i|
-|;|
-|for|
-|(|
-|i|
-|=|
-|0|
-|;|
-|i|
-|<|
-|10|
-|;|
-|i|
-|++|
-|)|
-|{|
-|if|
-|(|
-|i|
-|%|
-|2|
-|==|
-|0|
-|)|
-|{|
-|printf|
-|(|
-|"%d is even\n"|
+|float|
+|a|
 |,|
-|i|
+|double|
+|b|
 |)|
-|;|
-|}|
-|else|
 |{|
-|printf|
-|(|
-|"%d is odd\n"|
-|,|
-|i|
-|)|
-|;|
-|}|
-|}|
 |return|
-|0|
+|a|
+|+|
+|b|
 |;|
 |}|
+|int|
+|h|
+|(|
+|)|
+|double|
+|compute|
+|(|
+|short|
+|s|
+|,|
+|long|
+|l|
+|,|
+|unsigned|
+|ui|
+|,|
+|bool|

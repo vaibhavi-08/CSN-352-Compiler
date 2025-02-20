@@ -1,31 +1,62 @@
-Symbol Table:
+Original Symbol Table:
 -------------------------------------------------------------------------------
 | Lexeme                                | Token                                 |
 -------------------------------------------------------------------------------
-| else                                 | ELSE                                 |
-| }                                    | SEPERATOR                            |
-| ==                                   | EQ_OP                                |
-| 2                                    | INTEGER                              |
-| %                                    | MOD                                  |
-| "%d is even\n"                       | STRING LITERAL                       |
-| if                                   | IF                                   |
-| int                                  | INT                                  |
-| ++                                   | INC_OP                               |
-| return                               | RETURN                               |
-| "%d is odd\n"                        | STRING LITERAL                       |
-| (                                    | SEPERATOR                            |
-| )                                    | SEPERATOR                            |
-| printf                               | IDENTIFIER                           |
-| {                                    | SEPERATOR                            |
-| ,                                    | SEPERATOR                            |
-| <                                    | LESSTHAN                             |
-| ;                                    | SEPERATOR                            |
-| main                                 | IDENTIFIER                           |
-| for                                  | FOR                                  |
-| i                                    | IDENTIFIER                           |
-| =                                    | ASSIGN                               |
 | 0                                    | INTEGER                              |
+| return                               | RETURN                               |
+| }                                    | SEPERATOR                            |
+| 20                                   | INTEGER                              |
+| x                                    | IDENTIFIER                           |
+| !                                    | NOT                                  |
+| 0xFF                                 | CONSTANT HEX                         |
+| ^=                                   | XOR_ASSIGN                           |
+| 0x10                                 | CONSTANT HEX                         |
+| 0xF                                  | CONSTANT HEX                         |
+| &=                                   | AND_ASSIGN                           |
+| c                                    | IDENTIFIER                           |
+| int                                  | INT                                  |
+| 4                                    | INTEGER                              |
+| ptr                                  | IDENTIFIER                           |
+| 3                                    | INTEGER                              |
+| *                                    | MUL                                  |
+| ,                                    | SEPERATOR                            |
+| ~                                    | BITWISE_NOT                          |
+| if                                   | IF                                   |
+| ;                                    | SEPERATOR                            |
+| b                                    | IDENTIFIER                           |
+| /=                                   | DIV_ASSIGN                           |
+| |=                                   | OR_ASSIGN                            |
+| {                                    | SEPERATOR                            |
+| )                                    | SEPERATOR                            |
+| (                                    | SEPERATOR                            |
+| *=                                   | MUL_ASSIGN                           |
+| main                                 | IDENTIFIER                           |
+| =                                    | ASSIGN                               |
+| a                                    | IDENTIFIER                           |
+| 5                                    | INTEGER                              |
+| &                                    | BITWISE_AND                          |
+| unsigned                             | UNSIGNED                             |
+| +=                                   | ADD_ASSIGN                           |
 | 10                                   | INTEGER                              |
+| 2                                    | INTEGER                              |
+| %=                                   | MOD_ASSIGN                           |
+| <<=                                  | LEFT_ASSIGN                          |
+| -                                    | MINUS                                |
+| >>=                                  | RIGHT_ASSIGN                         |
+| 1                                    | INTEGER                              |
+-------------------------------------------------------------------------------
+
+
+New Symbol Table (Tokens and Types):
+-------------------------------------------------------------------------------
+| Token                 | Type                  |
+-------------------------------------------------------------------------------
+| x                    | INT                 
+| c                    | UNSIGNED            
+| ptr                  | INT                 
+| b                    | INT                 
+| a                    | INT                 
+| main                 | INT function        
 -------------------------------------------------------------------------------
 
 whole program after separation:
@@ -35,49 +66,87 @@ whole program after separation:
 |)|
 |{|
 |int|
-|i|
+|a|
+|,|
+|b|
 |;|
-|for|
-|(|
-|i|
+|int|
+|*|
+|ptr|
+|;|
+|int|
+|unsigned|
+|c|
+|;|
+|a|
 |=|
-|0|
+|5|
 |;|
-|i|
-|<|
+|b|
+|=|
+|-|
+|a|
+|;|
+|ptr|
+|=|
+|&|
+|a|
+|;|
+|c|
+|=|
+|~|
+|a|
+|;|
+|a|
+|+=|
 |10|
 |;|
-|i|
-|++|
-|)|
-|{|
+|b|
+|*=|
+|2|
+|;|
+|c|
+|/=|
+|3|
+|;|
+|a|
+|%=|
+|4|
+|;|
+|b|
+|<<=|
+|2|
+|;|
+|c|
+|>>=|
+|1|
+|;|
+|a|
+|&=|
+|0xF|
+|;|
+|b|
+||=|
+|0x10|
+|;|
+|c|
+|^=|
+|0xFF|
+|;|
 |if|
 |(|
-|i|
-|%|
-|2|
-|==|
-|0|
+|!|
+|a|
 |)|
 |{|
-|printf|
-|(|
-|"%d is even\n"|
-|,|
-|i|
-|)|
+|int|
+|x|
 |;|
-|}|
-|else|
-|{|
-|printf|
-|(|
-|"%d is odd\n"|
-|,|
-|i|
-|)|
+|*|
+|ptr|
+|=|
+|20|
 |;|
-|}|
 |}|
 |return|
 |0|
